@@ -1,0 +1,151 @@
+#!/usr/bin/python
+import socket
+import os
+import json
+import threading
+import time
+
+
+def timer(timing, stopping):
+    while True:
+        timing.wait()
+        if stopping.is_set():
+            return
+        client.sendall(command("get_property", "playback-time", rID=10))
+        time.sleep(2)
+
+
+def sec_to_str(s):
+    m, s = divmod(int(s), 60)
+    h, m = divmod(m, 60)
+    if h:
+        return "{:02d}:{:02d}:{:02d}".format(h, m, s)
+    else:
+        return "{:02d}:{:02d}".format(m, s)
+
+
+def command(*args, rID=0):
+    request = {"command": args}
+    if rID:
+        request["request_id"] = rID
+    return (json.dumps(request) + "\n").encode()
+
+
+def start(conn, p):
+    update_props(conn)
+    p.set()
+
+
+def stop(conn, p):
+    p.clear()
+    update()
+
+
+def update_props(conn):
+    conn.sendall(command("get_property", "media-title", rID=15))
+    conn.sendall(command("get_property", "duration", rID=11))
+    conn.sendall(command("get_property", "playback-time", rID=10))
+
+
+def update():
+    if idle:
+        print(flush=True)
+    elif paused:
+        print("{}      {}/{}".format(name, timestamp, length), flush=True)
+    else:
+        print("{}      {}/{}".format(name, timestamp, length), flush=True)
+
+
+path = os.environ["XDG_RUNTIME_DIR"]
+path += "/mpv/ipc-socket"
+timestamp = 0
+length = "00:00:00"
+name = ""
+paused = False
+idle = True
+if not os.path.exists(path):
+    print("Socket " + path + " not active", flush=True)
+
+timing = threading.Event()
+stopping = threading.Event()
+t = threading.Thread(target=timer, args=(timing, stopping,))
+t.start()
+
+client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+client.settimeout(None)
+client.connect(path)
+# Check state
+client.sendall(command("get_property", "idle-active", rID=1))
+client.sendall(command("get_property", "pause", rID=2))
+# Set up events
+client.sendall(command("disable_event", "all"))
+client.sendall(command("enable_event", "file-loaded"))
+client.sendall(command("enable_event", "start-file"))
+client.sendall(command("enable_event", "end-file"))
+client.sendall(command("enable_event", "idle"))
+
+# dose not work on streams
+# client.sendall(command("observe_property", 11, "duration"))
+client.sendall(command("observe_property", 2, "pause"))
+while True:
+    try:
+        data = client.recv(4096).decode()
+    except KeyboardInterrupt:
+        client.close()
+        stopping.set()
+        timing.set()
+        t.join()
+        break
+    data = data.splitlines()
+    for response in data:
+        response = json.loads(response)
+        # print(response)
+
+        # Requests
+        if "request_id" in response:
+            if response["error"] != "success":
+                print("error:", response)
+            elif response["request_id"] == 10:
+                timestamp = sec_to_str(response["data"])
+                update()
+            elif response["request_id"] == 11:
+                length = sec_to_str(response["data"])
+            elif response["request_id"] == 15:
+                name = response["data"]
+            elif response["request_id"] == 1 and not response["data"]:
+                start(client, timing)
+                idle = False
+            elif response["request_id"] == 2 and response["data"]:
+                paused = True
+                stop(client, timing)
+
+        # Observed properties
+        if "id" in response:
+            if response["id"] == 11:
+                length = sec_to_str(response["data"])
+            if response["id"] == 2 and not idle:  # Pause
+                if response["data"]:
+                    paused = True
+                    stop(client, timing)
+                else:
+                    paused = False
+                    start(client, timing)
+
+        # Events
+        if "event" in response:
+            if response["event"] == "file-loaded":
+                name = ""
+                length = timestamp = "00:00:00"
+                if paused:
+                    update_props(client)
+                else:
+                    start(client, timing)
+                idle = False
+            elif response["event"] == "idle":
+                idle = True
+                stop(client, timing)
+            elif response["event"] == "end-file":
+                stop(client, timing)
+            elif response["event"] == "start-file":
+                time.sleep(0.01)  # Hack for polybar
+                print("Loading next File", flush=True)

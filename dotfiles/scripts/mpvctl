@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# This script requires:
+# - that the directory $HOME/.mpv exist 
+# - that the program socat be installed
+# - that you start mpv with the unix socket feature pointing at that directory
+#       mpv --input-unix-socket=$HOME/.mpv/socket
+
+socket="$XDG_RUNTIME_DIR/mpv/ipc-socket"
+
+command() {
+	# JSON preamble.
+	local tosend='{ "command": ['
+	# adding in the parameters.
+	for arg in "$@"; do
+		tosend="$tosend \"$arg\","
+	done
+	# closing it up.
+	tosend=${tosend%?}' ] }'
+	# send it along and ignore output.
+	# to print output just remove the redirection to /dev/null
+	echo $tosend | socat - $socket # &> /dev/null
+}
+
+getp() {
+	command 'get_property' "$@"
+}
+
+setp() {
+	command 'set_property' "$@"
+}
+
+set_ytdl_format() {
+	if [ "$1" == "video" ]; then setp 'ytdl-format' 'bestvideo[height<=1000][vcodec!=vp9]+bestaudio/best'
+	elif [ "$1" == "audio" ]; then setp 'ytdl-format' 'bestaudio'
+	else setp 'ytdl-format' "$1"
+	fi
+}
+
+list_count() {
+	echo $(getp 'playlist-count' | jq -r ".data")
+}
+
+add() {
+	# add item(s) to playlist
+	shift &&
+	for video in "$@"; do
+		command 'loadfile' "$video" 'append-play';
+	done;
+}
+
+case "$1" in
+	stop)
+		# stop playing
+		command 'stop'
+		;;
+	play-pause)
+		# toggle play-pause
+		command 'cycle' 'pause'
+		;;
+	pause)
+		# pause playing
+		command 'set' 'pause' 'yes'
+		;;
+	play)
+		# start playing
+		command 'set' 'pause' 'no'
+		;;
+	next)
+		# play next item in playlist
+		command 'playlist_next'
+		;;
+	previous)
+		# play previous item in playlist
+		command 'playlist_prev'
+		;;
+	clear)
+		# clear playlist
+		command 'playlist_clear'
+		;;
+	add)
+		add "$@"
+		;;
+	add-video)
+		count=$(list_count)
+		set_ytdl_format 'video'
+		add "$@"
+		if  [ $count != 0 ]; then
+			pos=$(getp 'playlist-pos' | jq -r '.data')
+			((pos++))
+			command 'playlist-move' "$count" "$pos"
+			command 'playlist_next'
+		fi
+		setp 'pause' 'no'
+		sleep 5
+		set_ytdl_format 'audio'
+		;;
+	add-audio)
+		set_ytdl_format 'audio'
+		add "$@"
+		;;
+	pos)
+		if [ -z "$2" ]
+		then
+		   getp 'playlist-pos'
+	   else
+		   shift &&
+		   setp 'playlist-pos' "$@"
+	   fi
+		;;
+	count)
+		list_count
+		;;
+	file)
+		getp "playlist/$2/filename"
+		;;
+	playlist)
+		count=$(list_count)
+		for (( i=0; i < count ; i++))
+		do
+			getp "playlist/$i/filename"
+		done
+		;;
+	get)
+		shift && getp "$@"
+		;;
+	set)
+		shift && setp "$@"
+		;;
+		esac

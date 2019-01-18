@@ -1,0 +1,51 @@
+config:
+  backup: true
+  banner: true
+  create: true
+  dotpath: dotfiles
+  ignoreempty: false
+  keepdot: false
+  link_by_default: false
+  longkey: false
+  showdiff: false
+  workdir: ~/.config/dotdrop
+dotfiles:
+  d_i3:
+    dst: ~/.config/i3
+    src: config/i3
+  d_polybar:
+    dst: ~/.config/polybar
+    src: config/polybar
+  d_scripts:
+    dst: ~/.scripts
+    src: scripts
+  d_termite:
+    dst: ~/.config/termite
+    src: config/termite
+  f_compton.conf:
+    dst: ~/.config/compton.conf
+    src: config/compton.conf
+  f_gitconfig:
+    dst: ~/.gitconfig
+    src: gitconfig
+  f_init.vim:
+    dst: ~/.config/nvim/init.vim
+    src: config/nvim/init.vim
+  f_vimrc:
+    dst: ~/.vimrc
+    src: vimrc
+  f_xinitrc:
+    dst: ~/.xinitrc
+    src: xinitrc
+profiles:
+  pluto:
+    dotfiles:
+    - f_vimrc
+    - f_xinitrc
+    - f_gitconfig
+    - f_init.vim
+    - d_polybar
+    - d_i3
+    - f_compton.conf
+    - d_termite
+    - d_scripts
