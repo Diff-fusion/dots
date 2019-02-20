@@ -38,6 +38,9 @@ dotfiles:
     dst: ~/.xinitrc
     src: xinitrc
 profiles:
+  Jupiter:
+    dotfiles:
+    - f_xinitrc
   pluto:
     dotfiles:
     - f_vimrc
