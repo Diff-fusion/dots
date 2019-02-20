@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+termite --name=bookmarkViewer -e 'oil -p'

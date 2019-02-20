@@ -31,8 +31,11 @@ font pango:DejaVu Sans Mono 10
 floating_modifier $mod
 
 
-# ========== Keybindings ========== #
-# == navigation
+# ===================================================== #
+# ==================== Keybindings ==================== #
+# ===================================================== #
+
+# ==================== navigation ==================== #
 
 # change focus
 bindsym $mod+h focus left
@@ -82,7 +85,7 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
-# == layout
+# ==================== layout ==================== #
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -142,7 +145,7 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-# == start programs
+# ==================== start programs ==================== #
 
 # start a terminal
 bindsym $mod+Return exec --no-startup-id i3-sensible-terminal
@@ -158,7 +161,7 @@ bindsym $mod+c exec chromium
 bindsym $mod+q exec qutebrowser
 bindsym $mod+i exec ~/.config/lock/lock.sh
 
-# == control programs
+# ==================== control programs ==================== #
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -174,6 +177,9 @@ bindcode 235 exec --no-startup-id xset dpms force off
 #Umount usb devices
 bindsym $mod+u exec devmon --unmount-removable
 
+#Bookmarks
+bindsym $mod+Shift+M exec --no-startup-id ~/.scripts/bookmark
+
 # MPV
 mode "mpv" {
 	bindsym h exec --no-startup-id $mpvctl previous, mode "default"
@@ -186,7 +192,7 @@ mode "mpv" {
 }
 bindsym $mod+m mode "mpv"
 
-# == misc
+# ==================== Misc ==================== #
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -199,26 +205,24 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 
 # Reload background
 bindsym $mod+g exec --no-startup-id $HOME/.background
-exec --no-startup-id $HOME/.background
 
-#For I3-gaps
-for_window [class="^.*"] border pixel 2
-gaps inner 20
-gaps outer 5
-#smart_gaps on
 
-#Compton
-exec --no-startup-id compton -b
 
-#Polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+# ================================================================= #
+# ==================== Specific window options ==================== #
+# ================================================================= #
 
-#Unclutter hides mouse cursor
-exec --no-startup-id unclutter
+#Float bookmark manager
+for_window [instance="bookmarkViewer"] floating enable, border none
 
 #Float specific windows
 for_window [window_type="dialog"] floating enable
 for_window [window_type="menu"] floating enable
+
+
+# ========================================================== #
+# ==================== Startup Programs ==================== #
+# ========================================================== #
 
 #Disable TouchPad
 set $pad $(xinput list | grep Synaptics | cut -f 2 | cut -d '=' -f 2)
@@ -229,3 +233,25 @@ exec --no-startup-id "systemctl --user restart mpv.service"
 
 #devmon for automatic mounting
 exec --no-startup-id devmon
+
+#Compton
+exec --no-startup-id compton -b
+
+#Polybar
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+
+#Unclutter hides mouse cursor
+exec --no-startup-id unclutter
+
+#Set background
+exec --no-startup-id $HOME/.background
+
+
+
+#For I3-gaps
+for_window [class="^.*"] border pixel 2
+gaps inner 20
+gaps outer 5
+#smart_gaps on
+
+
