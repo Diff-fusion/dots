@@ -1,0 +1,21 @@
+# Aliases
+
+alias pSyu="sudo powerpill -Syu"
+alias pS="sudo pacman -S"
+alias pSs="pacman -Ss"
+alias pRs="sudo pacman -Rs"
+alias pFl="pacman -Fl"
+alias pFs="pacman -Fs"
+alias pFo="pacman -Fo"
+alias pQi="pacman -Qi"
+
+
+alias youaudio="mpv --ytdl-format=bestaudio"
+alias food="curl https://leetpi.ddns.net/mensaplan.txt"
+
+alias pwn="sudo machinectl start pwn; sleep 1; sudo machinectl login pwn"
+alias pwn-off="sudo machinectl stop pwn"
+
+alias oil="~/.scripts/bookmark"
+
+alias dotdrop="dotdrop --cfg=~/dotfiles/config.yaml"

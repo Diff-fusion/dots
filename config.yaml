@@ -22,21 +22,36 @@ dotfiles:
   d_termite:
     dst: ~/.config/termite
     src: config/termite
+  f_aliases:
+    dst: ~/.config/aliases
+    src: config/aliases
   f_compton.conf:
     dst: ~/.config/compton.conf
     src: config/compton.conf
+  f_config.py:
+    dst: ~/.config/qutebrowser/config.py
+    src: config/qutebrowser/config.py
   f_gitconfig:
     dst: ~/.gitconfig
     src: gitconfig
   f_init.vim:
     dst: ~/.config/nvim/init.vim
     src: config/nvim/init.vim
+  f_pam_environment:
+    dst: ~/.pam_environment
+    src: pam_environment
   f_vimrc:
     dst: ~/.vimrc
     src: vimrc
   f_xinitrc:
     dst: ~/.xinitrc
     src: xinitrc
+  f_zprofile:
+    dst: ~/.zprofile
+    src: zprofile
+  f_zshrc:
+    dst: ~/.zshrc
+    src: zshrc
 profiles:
   Jupiter:
     dotfiles:
@@ -52,3 +67,8 @@ profiles:
     - f_compton.conf
     - d_termite
     - d_scripts
+    - f_config.py
+    - f_aliases
+    - f_zshrc
+    - f_zprofile
+    - f_pam_environment

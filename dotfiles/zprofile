@@ -1,0 +1,11 @@
+# For login shells
+
+# set PATH
+pupdate() { case ":${PATH:=$1}:" in *:$1:*) ;; *) PATH="$1:$PATH" ;; esac; }
+pupdate "$HOME/.vim/plugged/vim-live-latex-preview/bin/"
+pupdate "$HOME/.local/MATLAB/R2018a/bin"
+
+#Start X. If not in X and in first terminal.
+if [ -z "$DISPLAY" ] && [ -n "$XDG_VTNR" ] && [ "$XDG_VTNR" -eq 1 ]; then
+	exec startx &> /dev/null
+fi
