@@ -1,0 +1,50 @@
+cd .config/
+search ran
+shell . ~/.base16_theme
+open_with vim
+find f
+mkdir Assignment4
+open_with nvim
+mkdir start
+search gid
+search ghidra
+search ghid
+rename lcars.bin
+search dotdrop
+search media
+rename Projekt 1_old.pdf
+mkdir hausaufgabe5
+shell drawelements 
+open_with dragon-drag-and-dropq
+open_with dragon-drag-and-drop
+open_with dragon-drag-and-drop -k
+rename abgabe.aux
+open_with qpdfview -u
+open_with xdg-open
+rename Aufgabe3_d.eps
+mkdir 4_LFI
+mkdir hausaufgabe6
+open_with 0
+open_with java -jar 
+open_with chmod +x
+rename exercise_4_a.sh
+rename exercise_4_b.sh
+open_with 
+open_with kkkk
+open_with dragon-drag-and-drop -x
+mkdir Project2
+mkdir orig#
+rename orig
+search martin
+search trump
+search sch
+rename project2-cipher-a.py
+rename project2-cipher-h.png
+
+mkdir Project3
+open_with 1
+rename team02-aufgabe4.pdf
+open_with dragon-drag-and-drop -xa
+mkdir 5_RCE
+open_with nvim-qt
+delete
