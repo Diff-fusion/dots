@@ -5,7 +5,8 @@ config:
   dotpath: dotfiles
   ignoreempty: false
   keepdot: false
-  link_by_default: false
+  link_dotfile_default: nolink
+  link_on_import: nolink
   longkey: false
   showdiff: false
   workdir: ~/.config/dotdrop
@@ -16,6 +17,9 @@ dotfiles:
   d_polybar:
     dst: ~/.config/polybar
     src: config/polybar
+  d_ranger:
+    dst: ~/.config/ranger
+    src: config/ranger
   d_scripts:
     dst: ~/.scripts
     src: scripts
@@ -72,3 +76,4 @@ profiles:
     - f_zshrc
     - f_zprofile
     - f_pam_environment
+    - d_ranger
