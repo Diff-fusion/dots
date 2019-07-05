@@ -41,6 +41,9 @@ dotfiles:
   f_init.vim:
     dst: ~/.config/nvim/init.vim
     src: config/nvim/init.vim
+  f_lock.sh:
+    dst: ~/.config/lock/lock.sh
+    src: config/lock/lock.sh
   f_pam_environment:
     dst: ~/.pam_environment
     src: pam_environment
@@ -77,3 +80,4 @@ profiles:
     - f_zprofile
     - f_pam_environment
     - d_ranger
+    - f_lock.sh

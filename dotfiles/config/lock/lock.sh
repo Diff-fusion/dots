@@ -1,0 +1,9 @@
+#!/bin/sh
+            revert() {
+              xset dpms 600 600 600
+            }
+            trap revert HUP INT TERM
+            xset +dpms dpms 5 5 5
+            i3lock -nefi /home/felix/.config/lock/Planets.png
+            revert
+
