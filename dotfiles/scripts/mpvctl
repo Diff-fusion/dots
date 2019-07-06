@@ -117,7 +117,7 @@ case "$1" in
 		count=$(list_count)
 		for (( i=0; i < count ; i++))
 		do
-			getp "playlist/$i/filename"
+			getp "playlist/$i/title"
 		done
 		;;
 	get)

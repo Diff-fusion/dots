@@ -17,15 +17,15 @@ dotfiles:
   d_polybar:
     dst: ~/.config/polybar
     src: config/polybar
-  d_ranger:
-    dst: ~/.config/ranger
-    src: config/ranger
   d_scripts:
     dst: ~/.scripts
     src: scripts
   d_termite:
     dst: ~/.config/termite
     src: config/termite
+  f_ag.zsh-theme:
+    dst: ~/.config/oh-my-zsh/custom/themes/ag.zsh-theme
+    src: config/oh-my-zsh/custom/themes/ag.zsh-theme
   f_aliases:
     dst: ~/.config/aliases
     src: config/aliases
@@ -59,6 +59,15 @@ dotfiles:
   f_zshrc:
     dst: ~/.zshrc
     src: zshrc
+  f_rc.conf:
+    src: config/ranger/rc.conf
+    dst: ~/.config/ranger/rc.conf
+  f_rifle.conf:
+    src: config/ranger/rifle.conf
+    dst: ~/.config/ranger/rifle.conf
+  f_scope.sh:
+    src: config/ranger/scope.sh
+    dst: ~/.config/ranger/scope.sh
 profiles:
   Jupiter:
     dotfiles:
@@ -79,5 +88,8 @@ profiles:
     - f_zshrc
     - f_zprofile
     - f_pam_environment
-    - d_ranger
     - f_lock.sh
+    - f_ag.zsh-theme
+    - f_rc.conf
+    - f_rifle.conf
+    - f_scope.sh

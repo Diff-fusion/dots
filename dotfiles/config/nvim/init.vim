@@ -10,10 +10,14 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'chriskempson/base16-vim'
 Plug 'ying17zi/vim-live-latex-preview'
 Plug 'lervag/vimtex'
+Plug 'PietroPate/vim-tex-conceal'
 Plug 'vimwiki/vimwiki'
 Plug 'scrooloose/nerdtree'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-clang'
+" Plug 'Shougo/neoinclude.vim' 
+" Plug 'Shougo/deoplete-clangx' 
+" Plug 'zchee/deoplete-clang'
+Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'zchee/deoplete-jedi'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
@@ -22,7 +26,6 @@ Plug 'w0rp/ale'
 Plug 'sbdchd/neoformat'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'ambv/black'
-Plug 'daeyun/vim-matlab'
 call plug#end()
 
 " Colors
@@ -99,6 +102,9 @@ set tabstop=4
 " enable auto indentation
 set autoindent
 
+" disable usless output from black
+let g:ale_python_black_options = '-q'
+
 " remove trailing whitespaces and ^M chars
 augroup ws
   au!
@@ -136,6 +142,28 @@ endfunction
 let g:deoplete#sources#clang#libclang_path='/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header='/usr/lib/clang'
 
+"autocmd CompleteDone * silent! pclose!
+
+" Change clang binary path
+call deoplete#custom#var('clangx', 'clang_binary', '/usr/bin/clang')
+
+" Change clang options
+call deoplete#custom#var('clangx', 'default_c_options', '')
+call deoplete#custom#var('clangx', 'default_cpp_options', '')
+
+"let g:deoplete#sources = {}
+
+"call deoplete#custom#option('sources', {'cpp':['clangx', 'include', 'clang', 'file/include'],})
+
+let g:LanguageClient_serverCommands = {
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+    \ }
+
+let g:LanguageClient_hasSnippetSupport = 0
+
 " Snippets
 " Plugin key-mappings.
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
@@ -166,8 +194,6 @@ function! s:compile_and_run()
        exec "AsyncRun! time bash %"
     elseif &filetype == 'python'
        exec "AsyncRun! time python %"
-    elseif &filetype == 'matlab'
-    	exec 'MatlabCliRunCell'
     endif
 endfunction
 
@@ -184,7 +210,7 @@ let g:asyncrun_open = 15
 silent! so .vimlocal
 
 " Run Black (Python code formatter) on save
-autocmd BufWritePost *.py execute ':Black'
+autocmd BufWritePost *.py silent! execute ':Black'
 
 
 " wiki configuration
@@ -224,4 +250,3 @@ let g:vimtex_view_general_viewer = 'qpdfview'
 let g:vimtex_view_general_options
 			\ = '--unique @pdf\#src:@tex:@line:@col'
 let g:vimtex_view_general_options_latexmk = '--unique'
-

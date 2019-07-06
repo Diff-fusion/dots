@@ -1,8 +1,9 @@
-SSH_AUTH_SOCK		DEFAULT="${XDG_RUNTIME_DIR}/ssh-agent.socket"
-TERMCMD				DEFAULT=termite
-TERMINAL			DEFAULT=termite
-EDITOR				DEFAULT=vim
-VISUAL				DEFAULT=nvim
-NDK_ROOT			DEFAULT="/opt/android-ndk/"
-JAVA_HOME			DEFAULT="/usr/lib/jvm/java-8-openjdk/"
-NVIM_LISTEN_ADDRESS	DEFAULT="/run/user/1000/nvim"
+SSH_AUTH_SOCK					DEFAULT="${XDG_RUNTIME_DIR}/ssh-agent.socket"
+TERMCMD							DEFAULT=termite
+TERMINAL						DEFAULT=termite
+EDITOR							DEFAULT=vim
+VISUAL							DEFAULT=nvim
+NDK_ROOT						DEFAULT="/opt/android-ndk/"
+JAVA_HOME						DEFAULT="/usr/lib/jvm/java-8-openjdk/"
+NVIM_LISTEN_ADDRESS				DEFAULT="/run/user/1000/nvim"
+QT_AUTO_SCREEN_SCALE_FACTOR		DEFAULT=0
